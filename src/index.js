@@ -10,11 +10,24 @@
 // // unregister() to register() below. Note this comes with some pitfalls.
 // // Learn more about service workers: https://bit.ly/CRA-PWA
 // serviceWorker.unregister();
+import React from 'react'
+import ReactDOM from 'react-dom'
 import {combineReducers,applyMiddleware,createStore} from 'redux'
 import logger from 'redux-logger';
 import {composeWithDevTools} from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import axios from 'axios'
+import {Provider} from 'react-redux'
+import './index.css'
+import allReducers from './reducers'
+import App from './components/App';
+
+const store=createStore(allReducers, composeWithDevTools(applyMiddleware(logger)))
+ReactDOM.render(
+        <Provider store={store}>
+        <App />, 
+        </Provider>,
+        document.getElementById('root'));
 //Create reducers to update store
 // const reducer=function(state,action){
 //     if(action.type==='INC'){
@@ -72,48 +85,48 @@ import axios from 'axios'
 
 //Async actions with Redux Thunk and Axios
 //npm install redux-think --save
-const initialState={
-    fetching:false,
-    fetched:false,
-    user:[],
-    error:null
-}
-const reducer=(state=initialState,action)=>{
-    switch(action.type){
-        case "FETCH_USERS_START":{
-            return{...state,fetching:true}
-        }
-        case "FETCH_USER_ERROR":{
-            return {...state,fetching:false,error:action.payload}
-        }
-        case "RECEIVE_USERS":{
-            return{
-                ...state,
-                fetching:false,
-                fetched:true,
-                users:action.payload
-            }
-        }
-    }
-    return state
-}
-const middleware=composeWithDevTools(applyMiddleware(thunk,logger))
-const store=createStore(reducer,middleware)
-store.dispatch((dispatch)=>{
-    //multiple actions occur with single acion
-    dispatch({
-        type:"FETCH_USERS_START"
-    })
-    axios.get("https://jsonplaceholder.typicode.com/users").then((
-        response =>{
-            dispatch({
-                type:"RECEIVE_USERS",payload:response.data
-            })
-        }
-    )).catch((error)=>{
-        dispatch({
-            type:"FETCH_USERS_ERROR",
-            payload:error
-        })
-    })
-})
+// const initialState={
+//     fetching:false,
+//     fetched:false,
+//     user:[],
+//     error:null
+// }
+// const reducer=(state=initialState,action)=>{
+//     switch(action.type){
+//         case "FETCH_USERS_START":{
+//             return{...state,fetching:true}
+//         }
+//         case "FETCH_USER_ERROR":{
+//             return {...state,fetching:false,error:action.payload}
+//         }
+//         case "RECEIVE_USERS":{
+//             return{
+//                 ...state,
+//                 fetching:false,
+//                 fetched:true,
+//                 users:action.payload
+//             }
+//         }
+//     }
+//     return state
+// }
+// const middleware=composeWithDevTools(applyMiddleware(thunk,logger))
+// const store=createStore(reducer,middleware)
+// store.dispatch((dispatch)=>{
+//     //multiple actions occur with single acion
+//     dispatch({
+//         type:"FETCH_USERS_START"
+//     })
+//     axios.get("https://jsonplaceholder.typicode.com/users").then((
+//         response =>{
+//             dispatch({
+//                 type:"RECEIVE_USERS",payload:response.data
+//             })
+//         }
+//     )).catch((error)=>{
+//         dispatch({
+//             type:"FETCH_USERS_ERROR",
+//             payload:error
+//         })
+//     })
+// })
